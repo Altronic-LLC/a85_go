@@ -1,4 +1,7 @@
-package a85
+package a85_go
+// Altronic a85 encoding/decoding library for Golang
+// Similar to z85 but no need to pre-pad before encoding/decoding.
+// Support for runs of \x00 and \xff to be encoded as a single character to be added later
 
 import (
 	"fmt"
@@ -22,8 +25,7 @@ var (
 	sizeDecoder = len(decoder)
 )
 
-// Encode encodes slice to a Z85 encoded string; length of slice must be multiple
-// of 4.
+//Encode a byte array to a string. No need to pad the string. Padding will be done automatically
 func Encode(slice []byte, sliceLength int) []byte {
 	rv := make([]byte, (sliceLength*5/4)+4)
 	dst := rv
@@ -70,7 +72,9 @@ func Encode(slice []byte, sliceLength int) []byte {
 	return dst[0:dstPtr]
 }
 
-// Decode decodes Z85 string to a slice; length of string must be multiple of 5.
+// Decode string to a slice
+// String length does not need to be a multiple of 5 if it was created with the corresponding
+//   encode function
 func Decode(str string) []byte {
 	size := len(str)
 	rv := make([]byte, (size*4/5)+10)
@@ -89,15 +93,6 @@ func Decode(str string) []byte {
 			continue
 		}
 
-		/*
-			for char := 0; char < 5; char++ {
-				index := str[char] - 32
-				if index < 0 || int(index) >= sizeDecoder {
-					return nil, errors.Errorf("Invalid Z85 string @ input( 0x%02x )", str[char])
-				}
-				value = value*85 + uint32(decoder[str[char]-32])
-			}
-		*/
 		dst[dstPtr] = byte(cur >> 24)
 		dstPtr += 1
 		dst[dstPtr] = byte(cur >> 16 & 255)
