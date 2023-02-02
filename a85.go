@@ -50,7 +50,6 @@ func Encode(slice []byte, sliceLength int) []byte {
 
 	}
 
-	fmt.Println("digits: ", digits)
 
 	if digits > 0 {
 		padding := 4 - digits
@@ -111,7 +110,6 @@ func Decode(str string) []byte {
 		cur = 0
 	}
 
-	fmt.Println("dropped out - digits: ", digits, "cur: ", cur)
 
 	if digits != 0 {
 		padding := 5 - digits
